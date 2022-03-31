@@ -1,1 +1,1 @@
-module.exports = async deployer => deployer.deploy(artifacts.require("MetaCoin"))
+module.exports = async deployer => await deployer.deploy(artifacts.require("MetaCoin"))
