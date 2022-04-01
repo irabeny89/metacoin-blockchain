@@ -1,15 +1,10 @@
 const MetaCoin = artifacts.require("MetaCoin"),
   numUnit = 5000,
-  reduceString = stringValue => {
-    if (typeof stringValue === "string" && stringValue.length > 10)
-      return `${stringValue.substring(0, 5)}...${stringValue.slice(-3)}`
-    else throw new Error("Not string type and/or string less than 11")
-  }
+  { reduceString } = require("../utils/index.js")
+
 contract("MetaCoin", accounts => {
   it(`owner(${reduceString(accounts[0])}) mints ${numUnit} units to an address: ${reduceString(accounts[1])}`, async () => {
-    const metaCoin = await MetaCoin.deployed({
-      from: accounts[0]
-    }),
+    const metaCoin = await MetaCoin.deployed(),
       { logs: { 0: {
         args
       } } } = await metaCoin.mint(accounts[1], numUnit, {
@@ -22,16 +17,12 @@ contract("MetaCoin", accounts => {
     })
   })
   it(`gets balance of address: ${reduceString(accounts[1])} => ${numUnit}`, async () => {
-    const metaCoin = await MetaCoin.deployed({
-      from: accounts[0]
-    }),
+    const metaCoin = await MetaCoin.deployed(),
       balance = await metaCoin.balances(accounts[1])
     assert.equal(balance.toNumber(), numUnit)
   })
   it(`sends ${numUnit - 3e3} coins from address ${reduceString(accounts[1])} to ${reduceString(accounts[2])}`, async () => {
-    const metaCoin = await MetaCoin.deployed({
-      from: accounts[0]
-    }),
+    const metaCoin = await MetaCoin.deployed(),
       { logs: { 0: {
         args
       } } } = await metaCoin.sendCoin(accounts[2], numUnit - 3e3, {
